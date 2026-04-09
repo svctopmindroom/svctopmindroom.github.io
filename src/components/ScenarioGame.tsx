@@ -135,7 +135,7 @@ const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
                   <span className="text-lg mt-0.5">{choice.emoji}</span>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-foreground">{choice.text}</p>
-                    {showFeedback && index === selectedChoice && (
+                    {showFeedback && i === selectedChoice && (
                       <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
