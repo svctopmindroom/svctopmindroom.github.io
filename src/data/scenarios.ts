@@ -1,187 +1,352 @@
 export interface Choice {
   text: string;
+  emoji: string;
   feedback: string;
-  score: number; // 0-3: 0=harmful, 1=poor, 2=good, 3=best
-  category: 'self-care' | 'empathy' | 'boundary' | 'help-seeking';
+  energyChange: number; // negative = drain, positive = recover
+  tag: 'drain' | 'neutral' | 'recover';
 }
 
-export interface Scenario {
+export interface Scene {
   id: number;
   title: string;
   icon: string;
+  timeLabel: string;
   situation: string;
-  context: string;
+  subtext: string;
   choices: Choice[];
 }
 
-export const scenarios: Scenario[] = [
+export const scenes: Scene[] = [
   {
     id: 1,
-    title: "악성 민원 대응",
-    icon: "📞",
-    situation: "오늘 하루 종일 욕설과 인신공격을 하는 고객 전화를 받았습니다. 퇴근 후에도 그 말들이 머릿속에서 떠나지 않고, 가슴이 답답합니다.",
-    context: "감정노동 후 정서적 회복이 필요한 상황",
+    title: "출근 전 알림",
+    icon: "⏰",
+    timeLabel: "AM 7:30",
+    situation: "눈을 뜨자마자 업무 알림이 쏟아집니다. 오늘도 벌써 메시지가 12개. 마음이 무거워집니다.",
+    subtext: "하루의 시작, 첫 선택이 중요해요",
     choices: [
       {
-        text: "\"나는 괜찮아\"라고 스스로에게 말하며 참는다",
-        feedback: "감정을 억누르면 오히려 스트레스가 쌓입니다. 힘든 감정을 인정하는 것이 회복의 첫 걸음이에요.",
-        score: 1,
-        category: 'self-care'
+        text: "바로 알림을 열어 확인한다",
+        emoji: "📱",
+        feedback: "아직 눈도 제대로 못 떴는데 업무 모드로 전환되면 에너지가 빠르게 소진돼요.",
+        energyChange: -10,
+        tag: 'drain'
       },
       {
-        text: "믿을 수 있는 동료에게 오늘 있었던 일을 이야기한다",
-        feedback: "훌륭한 선택이에요! 감정을 나누는 것은 가장 효과적인 스트레스 해소법 중 하나입니다. 혼자 감당하지 않아도 됩니다.",
-        score: 3,
-        category: 'help-seeking'
+        text: "물 한 잔을 먼저 마신다",
+        emoji: "💧",
+        feedback: "작은 행동이지만 '나를 먼저 챙기겠다'는 신호를 몸에 보내는 거예요. 좋은 시작!",
+        energyChange: +5,
+        tag: 'recover'
       },
       {
-        text: "고객에게 화가 나서 다음 전화부터 냉담하게 응대한다",
-        feedback: "감정이 상한 것은 당연하지만, 이런 대응은 추가적인 갈등을 만들 수 있어요. 자신의 감정을 먼저 돌봐주세요.",
-        score: 0,
-        category: 'boundary'
-      },
-      {
-        text: "퇴근 후 좋아하는 활동(산책, 음악 등)으로 기분을 전환한다",
-        feedback: "좋은 방법이에요! 자기만의 회복 루틴을 갖는 것은 감정노동에서 벗어나는 데 큰 도움이 됩니다.",
-        score: 2,
-        category: 'self-care'
+        text: "3번 깊은 호흡을 한다",
+        emoji: "🌬️",
+        feedback: "호흡 하나로 자율신경이 안정돼요. 하루를 내 속도로 시작하는 연습이에요.",
+        energyChange: +5,
+        tag: 'recover'
       }
     ]
   },
   {
     id: 2,
-    title: "번아웃 위기",
-    icon: "🔥",
-    situation: "최근 몇 주 동안 출근이 너무 두렵고, 아무것도 하기 싫습니다. 업무 중 갑자기 눈물이 나기도 합니다. 밤에 잠도 잘 오지 않습니다.",
-    context: "번아웃과 우울 증상이 나타나는 상황",
+    title: "업무평가 기준 변경",
+    icon: "📋",
+    timeLabel: "AM 9:15",
+    situation: "출근하자마자 공지: \"오늘부터 평가 기준이 변경됩니다.\" 이미 기존 기준도 버거웠는데, 더 높아졌습니다.",
+    subtext: "예고 없는 변화 앞에서",
     choices: [
       {
-        text: "\"다른 사람들도 다 이렇게 힘들겠지\"라며 견딘다",
-        feedback: "모든 사람이 같은 강도로 힘든 것은 아니에요. 지금 느끼는 고통은 진지하게 다뤄져야 합니다. 도움을 요청해도 괜찮아요.",
-        score: 0,
-        category: 'self-care'
+        text: "\"알겠습니다\" 하고 다 받아들인다",
+        emoji: "😔",
+        feedback: "모든 걸 수용하면 자신도 모르게 분노와 무력감이 쌓여요. 감정을 눌러두면 몸이 대신 아파합니다.",
+        energyChange: -10,
+        tag: 'drain'
       },
       {
-        text: "상사에게 상담을 요청하고 업무 조정을 논의한다",
-        feedback: "용기 있는 선택이에요! 자신의 한계를 인정하고 도움을 요청하는 것은 강함의 표시입니다.",
-        score: 3,
-        category: 'help-seeking'
+        text: "변경된 기준의 우선순위를 확인한다",
+        emoji: "🔍",
+        feedback: "상황을 파악하려는 태도는 통제감을 되찾는 방법이에요. 모든 걸 한번에 해결할 필요 없어요.",
+        energyChange: +2,
+        tag: 'recover'
       },
       {
-        text: "회사 EAP(직원지원프로그램)나 전문 상담을 이용한다",
-        feedback: "매우 좋은 선택이에요! 전문가의 도움을 받는 것은 빠른 회복의 지름길입니다. 혼자 해결할 필요 없어요.",
-        score: 3,
-        category: 'help-seeking'
-      },
-      {
-        text: "커피와 에너지드링크로 버틴다",
-        feedback: "일시적으로는 효과가 있을 수 있지만, 근본적인 해결이 되지 않아요. 몸과 마음 모두 쉬어야 할 때입니다.",
-        score: 0,
-        category: 'self-care'
+        text: "동료와 느낀 점을 간단히 공유한다",
+        emoji: "💬",
+        feedback: "\"나만 이렇게 느끼는 건 아니구나\"라는 확인만으로도 마음이 가벼워져요.",
+        energyChange: +3,
+        tag: 'recover'
       }
     ]
   },
   {
     id: 3,
-    title: "동료의 위기 신호",
-    icon: "👥",
-    situation: "평소 밝던 동료가 최근 \"이렇게 사는 게 무슨 의미가 있나\"라는 말을 자주 합니다. 점심도 혼자 먹고, 업무 중 자주 멍하니 있는 모습이 보입니다.",
-    context: "동료의 위기 신호를 발견한 상황",
+    title: "에너지 하락",
+    icon: "🔋",
+    timeLabel: "AM 11:00",
+    situation: "오전 내내 쉴 틈 없이 일했습니다. 목이 뻣뻣하고, 눈이 침침하고, 머리가 무겁습니다.",
+    subtext: "몸이 보내는 신호를 알아채는 순간",
     choices: [
       {
-        text: "개인적인 일이니까 모른 척 한다",
-        feedback: "이런 신호를 무시하면 위험할 수 있어요. 관심을 표현하는 것만으로도 큰 힘이 될 수 있습니다.",
-        score: 0,
-        category: 'empathy'
+        text: "\"좀만 더 하면 되니까\" 참는다",
+        emoji: "😤",
+        feedback: "참는 것이 강한 게 아니에요. 신호를 무시하면 결국 더 큰 소진으로 이어져요.",
+        energyChange: -8,
+        tag: 'drain'
       },
       {
-        text: "조용한 곳에서 \"요즘 많이 힘들어 보여서 걱정돼\"라고 말을 건넨다",
-        feedback: "최고의 선택이에요! 진심 어린 관심의 한마디가 누군가의 생명을 구할 수 있습니다. '걱정된다'는 표현이 핵심이에요.",
-        score: 3,
-        category: 'empathy'
+        text: "앉은 자세를 바꾸고 어깨를 돌린다",
+        emoji: "🪑",
+        feedback: "몸의 자세를 바꾸면 생각의 흐름도 바뀌어요. 30초만 투자해도 달라집니다.",
+        energyChange: +3,
+        tag: 'recover'
       },
       {
-        text: "\"힘내! 다 잘 될 거야\"라고 격려한다",
-        feedback: "선한 의도지만, 힘든 사람에게 '힘내라'는 말은 오히려 부담이 될 수 있어요. 경청과 공감이 더 효과적입니다.",
-        score: 1,
-        category: 'empathy'
-      },
-      {
-        text: "팀장이나 사내 상담사에게 동료의 상태를 알린다",
-        feedback: "좋은 판단이에요! 전문가의 개입이 필요한 상황일 수 있습니다. 혼자 감당하려 하지 않는 것도 중요해요.",
-        score: 2,
-        category: 'help-seeking'
+        text: "자리에서 일어나 잠시 걷는다",
+        emoji: "🚶",
+        feedback: "움직임은 가장 빠른 기분 전환법이에요. 화장실이라도 다녀오는 것만으로 충분해요.",
+        energyChange: +5,
+        tag: 'recover'
       }
     ]
   },
   {
     id: 4,
-    title: "자기 돌봄의 시간",
-    icon: "🌿",
-    situation: "연속 야근과 감정적으로 힘든 통화 후, 주말에도 쉬지 못하고 불안감이 계속됩니다. \"나는 쓸모없는 사람\"이라는 생각이 들기 시작합니다.",
-    context: "자존감 저하와 불안이 심화되는 상황",
+    title: "동료가 출근하지 않음",
+    icon: "👤",
+    timeLabel: "PM 1:00",
+    situation: "같은 팀 동료가 오늘 갑자기 결근했습니다. 그 몫이 고스란히 나에게 왔습니다. 화가 나다가도 걱정됩니다.",
+    subtext: "부족한 인력, 늘어나는 부담",
     choices: [
       {
-        text: "혼자서 술이나 게임으로 시간을 보낸다",
-        feedback: "일시적 회피는 장기적으로 상황을 악화시킬 수 있어요. 건강한 방식으로 자신을 돌봐주세요.",
-        score: 0,
-        category: 'self-care'
+        text: "\"또야\" 하며 감정을 무시한다",
+        emoji: "😑",
+        feedback: "반복되는 상황에 무감각해지는 것은 위험 신호예요. 감정은 억누른다고 사라지지 않아요.",
+        energyChange: -8,
+        tag: 'drain'
       },
       {
-        text: "정신건강 위기상담 전화(1393)에 전화한다",
-        feedback: "매우 용감한 선택이에요! 전문 상담원이 24시간 대기하고 있습니다. 도움을 요청하는 것은 강한 사람만이 할 수 있는 일이에요.",
-        score: 3,
-        category: 'help-seeking'
+        text: "동료에게 짧은 안부 메시지를 보낸다",
+        emoji: "💌",
+        feedback: "\"괜찮아?\" 한마디가 누군가에겐 큰 위로가 됩니다. 관계가 에너지가 되는 순간이에요.",
+        energyChange: +3,
+        tag: 'recover'
       },
       {
-        text: "감정일기를 쓰며 자신의 마음 상태를 정리해본다",
-        feedback: "좋은 방법이에요! 글쓰기는 복잡한 감정을 정리하고 자기 인식을 높이는 데 효과적입니다.",
-        score: 2,
-        category: 'self-care'
+        text: "오늘 할 수 있는 만큼만 정한다",
+        emoji: "📝",
+        feedback: "완벽하게 다 하려 하면 무너져요. '오늘은 여기까지'라는 선을 긋는 것도 능력이에요.",
+        energyChange: +4,
+        tag: 'recover'
+      }
+    ]
+  },
+  {
+    id: 5,
+    title: "목표 미달성",
+    icon: "📊",
+    timeLabel: "PM 2:30",
+    situation: "오후 중간 점검. 오늘 목표의 60%밖에 못 했습니다. \"나는 왜 이것밖에 못 하지\"라는 생각이 올라옵니다.",
+    subtext: "자기 비난이 시작될 때",
+    choices: [
+      {
+        text: "자책하며 더 빠르게 일한다",
+        emoji: "😰",
+        feedback: "자책은 동기부여가 아니라 에너지 도둑이에요. 속도를 높여도 마음은 더 지칩니다.",
+        energyChange: -10,
+        tag: 'drain'
       },
       {
-        text: "가족이나 친한 친구에게 솔직하게 힘든 마음을 말한다",
-        feedback: "훌륭해요! 사랑하는 사람들과 연결되는 것은 가장 강력한 보호 요인 중 하나입니다.",
-        score: 3,
-        category: 'empathy'
+        text: "지금 느끼는 감정에 이름을 붙인다",
+        emoji: "🏷️",
+        feedback: "\"아, 지금 좌절감이구나.\" 감정에 이름을 붙이면 뇌가 진정돼요. 과학적으로 검증된 방법이에요.",
+        energyChange: +4,
+        tag: 'recover'
+      },
+      {
+        text: "오늘 기대치를 현실적으로 조정한다",
+        emoji: "🎯",
+        feedback: "100%가 아니어도 괜찮아요. 80%의 나도, 60%의 나도 충분히 잘하고 있어요.",
+        energyChange: +3,
+        tag: 'recover'
+      }
+    ]
+  },
+  {
+    id: 6,
+    title: "3분 회복 타임",
+    icon: "⏱️",
+    timeLabel: "PM 3:00",
+    situation: "잠깐 쉴 수 있는 3분이 생겼습니다. 이 시간을 어떻게 쓸까요?",
+    subtext: "작은 쉼이 큰 차이를 만들어요",
+    choices: [
+      {
+        text: "4-7-8 호흡법 (들숨4초-참기7초-날숨8초)",
+        emoji: "🫁",
+        feedback: "이 호흡법은 부교감신경을 활성화해 빠르게 안정을 찾게 해줘요. 2~3회면 충분합니다.",
+        energyChange: +5,
+        tag: 'recover'
+      },
+      {
+        text: "따뜻한 물을 천천히 마신다",
+        emoji: "☕",
+        feedback: "따뜻한 물은 몸의 긴장을 풀어줘요. 마시는 동안 잠시 멈추는 것 자체가 회복이에요.",
+        energyChange: +4,
+        tag: 'recover'
+      },
+      {
+        text: "목·어깨 스트레칭을 한다",
+        emoji: "🙆",
+        feedback: "감정노동은 몸에 긴장으로 쌓여요. 스트레칭으로 그 긴장을 물리적으로 풀어줄 수 있어요.",
+        energyChange: +5,
+        tag: 'recover'
+      }
+    ]
+  },
+  {
+    id: 7,
+    title: "자기 대화",
+    icon: "💭",
+    timeLabel: "PM 4:00",
+    situation: "\"이 일은 나 아니면 안 돼\", \"좀 더 잘해야 하는데\"... 머릿속에서 끊임없이 목소리가 들립니다.",
+    subtext: "내 안의 목소리, 어떤 말을 선택할까요?",
+    choices: [
+      {
+        text: "\"더 열심히 해야지\" 하며 과몰입한다",
+        emoji: "🌀",
+        feedback: "과몰입은 헌신이 아니라 소진의 지름길이에요. 나를 갈아넣는 건 프로가 아닙니다.",
+        energyChange: -10,
+        tag: 'drain'
+      },
+      {
+        text: "\"지금까지 잘 버텼어\" 하고 인정한다",
+        emoji: "🤗",
+        feedback: "자기 인정은 가장 강력한 회복 도구예요. 완벽하지 않아도 충분히 잘하고 있어요.",
+        energyChange: +5,
+        tag: 'recover'
+      },
+      {
+        text: "\"여기까지가 내 영역이야\" 경계를 긋는다",
+        emoji: "🛡️",
+        feedback: "건강한 경계는 이기심이 아니에요. 나를 지켜야 남도 도울 수 있습니다.",
+        energyChange: +4,
+        tag: 'recover'
+      }
+    ]
+  },
+  {
+    id: 8,
+    title: "동료와 연결",
+    icon: "🤝",
+    timeLabel: "PM 5:00",
+    situation: "옆자리 동료도 지쳐 보입니다. 말을 건네고 싶은데, 뭐라고 해야 할지 모르겠습니다.",
+    subtext: "따뜻한 한마디의 힘",
+    choices: [
+      {
+        text: "\"오늘 고생 많았어, 수고했어\"",
+        emoji: "👋",
+        feedback: "인정과 위로의 한마디는 서로에게 에너지가 돼요. 말을 건넨 당신도 따뜻해집니다.",
+        energyChange: +4,
+        tag: 'recover'
+      },
+      {
+        text: "\"힘들면 말해, 같이 방법 찾아보자\"",
+        emoji: "🫂",
+        feedback: "혼자가 아니라는 걸 느끼게 해주는 말이에요. 해결보다 연결이 먼저입니다.",
+        energyChange: +5,
+        tag: 'recover'
+      },
+      {
+        text: "\"잠깐 나가서 바람 쐬자\"",
+        emoji: "🌿",
+        feedback: "함께하는 휴식은 혼자보다 두 배의 회복을 줘요. 관계 속에서 쉬는 법을 배우는 거예요.",
+        energyChange: +5,
+        tag: 'recover'
+      }
+    ]
+  },
+  {
+    id: 9,
+    title: "퇴근 루틴",
+    icon: "🌙",
+    timeLabel: "PM 6:30",
+    situation: "드디어 퇴근. 하지만 머릿속은 아직 사무실에 있습니다. 업무 생각이 계속 맴돕니다.",
+    subtext: "일과 나를 분리하는 시간",
+    choices: [
+      {
+        text: "업무 알림을 모두 끈다",
+        emoji: "🔕",
+        feedback: "알림을 끄는 건 무책임한 게 아니에요. 퇴근 후의 나는 '직원'이 아니라 '나'입니다.",
+        energyChange: +4,
+        tag: 'recover'
+      },
+      {
+        text: "샤워 후 편한 옷으로 갈아입는다",
+        emoji: "🚿",
+        feedback: "물리적으로 '모드 전환'을 하면 마음도 따라와요. 의식적인 전환 루틴이 중요해요.",
+        energyChange: +4,
+        tag: 'recover'
+      },
+      {
+        text: "오늘 감정을 한 줄로 기록한다",
+        emoji: "📝",
+        feedback: "\"오늘은 지쳤다.\" 이 한 줄이 감정을 정리하고, 내일을 준비하게 해줘요.",
+        energyChange: +5,
+        tag: 'recover'
+      },
+      {
+        text: "가벼운 운동이나 산책을 한다",
+        emoji: "🏃",
+        feedback: "몸을 움직이면 스트레스 호르몬이 줄어들어요. 10분이면 충분합니다.",
+        energyChange: +5,
+        tag: 'recover'
+      }
+    ]
+  },
+  {
+    id: 10,
+    title: "내일의 약속",
+    icon: "🌅",
+    timeLabel: "PM 9:00",
+    situation: "하루를 마무리하며, 내일을 위한 최소한의 회복 행동 하나를 정해봅니다.",
+    subtext: "거창하지 않아도 돼요. 하나면 충분해요.",
+    choices: [
+      {
+        text: "아침에 물 한 잔 마시기",
+        emoji: "💧",
+        feedback: "가장 작은 시작이 가장 오래 갑니다. 물 한 잔으로 하루를 여는 연습을 해보세요.",
+        energyChange: +3,
+        tag: 'recover'
+      },
+      {
+        text: "점심시간에 3분 호흡하기",
+        emoji: "🌬️",
+        feedback: "하루 중간에 멈추는 연습. 3분이 당신의 오후를 바꿀 수 있어요.",
+        energyChange: +3,
+        tag: 'recover'
+      },
+      {
+        text: "퇴근 후 알림 끄기",
+        emoji: "🔕",
+        feedback: "퇴근 후의 시간은 온전히 나의 것. 이 경계를 지키는 것이 내일의 에너지예요.",
+        energyChange: +3,
+        tag: 'recover'
       }
     ]
   }
 ];
 
-export const getScoreMessage = (totalScore: number, maxScore: number): { title: string; message: string; emoji: string } => {
-  const percentage = (totalScore / maxScore) * 100;
-  
-  if (percentage >= 80) {
-    return {
-      title: "마음 돌봄 전문가! 🌟",
-      message: "당신은 자신과 동료의 마음을 잘 돌볼 줄 아는 사람이에요. 이 따뜻한 마음을 주변에 계속 나눠주세요.",
-      emoji: "🌟"
-    };
-  } else if (percentage >= 60) {
-    return {
-      title: "따뜻한 동반자 💚",
-      message: "좋은 방향으로 가고 있어요! 조금 더 적극적으로 도움을 요청하고, 주변을 살피는 연습을 해보세요.",
-      emoji: "💚"
-    };
-  } else if (percentage >= 40) {
-    return {
-      title: "성장하는 중 🌱",
-      message: "힘든 상황에서 어떻게 대처해야 할지 더 알아가는 과정에 있어요. 오늘 배운 것들을 기억해주세요.",
-      emoji: "🌱"
-    };
-  } else {
-    return {
-      title: "첫 걸음을 뗐어요 🤝",
-      message: "감정을 다루는 것은 배울 수 있는 기술이에요. 힘들 때 도움을 요청하는 것은 부끄러운 일이 아닙니다.",
-      emoji: "🤝"
-    };
-  }
+export const getEnergyLabel = (energy: number): { label: string; emoji: string; color: string } => {
+  if (energy >= 80) return { label: "충전 완료", emoji: "✨", color: "hope" };
+  if (energy >= 60) return { label: "안정적", emoji: "💚", color: "primary" };
+  if (energy >= 40) return { label: "주의 필요", emoji: "🟡", color: "warm" };
+  if (energy >= 20) return { label: "위험 구간", emoji: "🟠", color: "accent" };
+  return { label: "긴급 충전 필요", emoji: "🔴", color: "destructive" };
 };
 
 export const helpResources = [
   { name: "정신건강 위기상담 전화", number: "1393", description: "24시간 무료 상담", icon: "📞" },
-  { name: "자살예방 상담전화", number: "1393", description: "생명의 전화", icon: "💚" },
   { name: "근로자 건강센터", number: "1588-6497", description: "직장인 심리상담", icon: "🏥" },
   { name: "정신건강복지센터", number: "1577-0199", description: "지역 정신건강 서비스", icon: "🌿" },
+  { name: "자살예방 상담전화", number: "109", description: "생명의 전화 24시간", icon: "💚" },
 ];
