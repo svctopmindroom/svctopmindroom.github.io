@@ -25,6 +25,20 @@ export interface Scene {
 
 export const scenes: Scene[] = [
   {
+    id: 0,
+    title: "하루의 시작",
+    icon: "🏠",
+    timeLabel: "AM 7:00",
+    situation: "출근하기 싫지만 가려고 출근 준비하는 중. 오늘도 긴 하루가 될 것 같다.",
+    subtext: "아직 집인데 벌써 피곤한 아침",
+    location: { name: "집", emoji: "🏠", positionPercent: 3, bgTime: 'morning', characterAction: 'standing' },
+    choices: [
+      { text: "빨리 준비하고 나가자", emoji: "🏃", feedback: "에너지 -5, 긴장 상승. 마음도 준비 안 됐는데 몸만 먼저 나가면 하루가 버거워져요.", energyChange: -5, tag: 'drain' },
+      { text: "좋아하는 음악 틀고 준비", emoji: "🎵", feedback: "에너지 +5, 기분 전환. 익숙한 노래 하나가 출근길 마음을 가볍게 해줘요.", energyChange: +5, tag: 'recover' },
+      { text: "거울 보며 '오늘도 해보자'", emoji: "🪞", feedback: "에너지 +5, 자기 격려. 거창하지 않아도, 나한테 건네는 한마디가 힘이 돼요.", energyChange: +5, tag: 'recover' },
+    ]
+  },
+  {
     id: 1,
     title: "업무 전 쪽지들",
     icon: "📋",
