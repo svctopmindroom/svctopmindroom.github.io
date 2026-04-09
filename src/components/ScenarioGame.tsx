@@ -75,16 +75,16 @@ const WorldLocation = ({
   </div>
 );
 
-// --- Background gradient based on time ---
+// --- Background gradient based on time (brighter tones) ---
 const getTimeGradient = (bgTime: string, energy: number) => {
-  const dimFactor = Math.max(0.4, energy / 100);
+  const dimFactor = Math.max(0.6, energy / 100);
   const baseGradients: Record<string, string> = {
-    morning: `linear-gradient(180deg, hsl(200 60% ${70 * dimFactor}%) 0%, hsl(40 50% ${90 * dimFactor}%) 100%)`,
-    midmorning: `linear-gradient(180deg, hsl(200 50% ${65 * dimFactor}%) 0%, hsl(40 40% ${85 * dimFactor}%) 100%)`,
-    noon: `linear-gradient(180deg, hsl(200 40% ${60 * dimFactor}%) 0%, hsl(35 45% ${80 * dimFactor}%) 100%)`,
-    afternoon: `linear-gradient(180deg, hsl(25 50% ${65 * dimFactor}%) 0%, hsl(35 40% ${80 * dimFactor}%) 100%)`,
-    evening: `linear-gradient(180deg, hsl(25 40% ${50 * dimFactor}%) 0%, hsl(220 30% ${40 * dimFactor}%) 100%)`,
-    night: `linear-gradient(180deg, hsl(230 30% ${25 * dimFactor}%) 0%, hsl(240 25% ${15 * dimFactor}%) 100%)`,
+    morning: `linear-gradient(180deg, hsl(205 70% ${85 * dimFactor}%) 0%, hsl(45 70% ${95 * dimFactor}%) 100%)`,
+    midmorning: `linear-gradient(180deg, hsl(200 65% ${82 * dimFactor}%) 0%, hsl(42 60% ${92 * dimFactor}%) 100%)`,
+    noon: `linear-gradient(180deg, hsl(200 55% ${80 * dimFactor}%) 0%, hsl(38 55% ${90 * dimFactor}%) 100%)`,
+    afternoon: `linear-gradient(180deg, hsl(30 60% ${78 * dimFactor}%) 0%, hsl(40 50% ${88 * dimFactor}%) 100%)`,
+    evening: `linear-gradient(180deg, hsl(25 55% ${65 * dimFactor}%) 0%, hsl(240 35% ${55 * dimFactor}%) 100%)`,
+    night: `linear-gradient(180deg, hsl(230 40% ${35 * dimFactor}%) 0%, hsl(245 30% ${22 * dimFactor}%) 100%)`,
   };
   return baseGradients[bgTime] || baseGradients.morning;
 };
@@ -92,22 +92,47 @@ const getTimeGradient = (bgTime: string, energy: number) => {
 // --- World buildings between locations ---
 const worldElements = ['🏠', '🌳', '🚗', '🏢', '🌳', '🖥️', '💻', '🍽️', '🪑', '📊', '☕', '💭', '🤝', '🌳', '🚶', '🏠'];
 
+// --- Energy tier helpers ---
+const getEnergyTier = (energy: number) => {
+  if (energy >= 70) return { color: 'bg-hope', glowColor: 'shadow-[0_0_12px_hsl(152,40%,50%,0.5)]', label: '좋은 컨디션 ✨', textColor: 'text-hope' };
+  if (energy >= 50) return { color: 'bg-primary', glowColor: 'shadow-[0_0_10px_hsl(152,35%,45%,0.4)]', label: '안정적 💚', textColor: 'text-primary' };
+  if (energy >= 30) return { color: 'bg-warm', glowColor: 'shadow-[0_0_10px_hsl(35,60%,55%,0.4)]', label: '충전 필요 ⚡', textColor: 'text-warm' };
+  return { color: 'bg-accent', glowColor: 'shadow-[0_0_12px_hsl(12,60%,68%,0.5)]', label: '긴급 충전 필요 🔴', textColor: 'text-accent' };
+};
+
 // --- Energy Bar ---
-const EnergyBar = ({ energy }: { energy: number }) => (
-  <div className="flex items-center gap-2 w-full">
-    <Zap className="w-4 h-4 text-warm flex-shrink-0" />
-    <div className="flex-1 h-2.5 bg-background/30 rounded-full overflow-hidden backdrop-blur-sm">
-      <motion.div
-        className={`h-full rounded-full ${
-          energy >= 60 ? 'bg-hope' : energy >= 35 ? 'bg-warm' : 'bg-accent'
-        }`}
-        animate={{ width: `${Math.max(0, Math.min(100, energy))}%` }}
-        transition={{ duration: 0.6 }}
-      />
+const EnergyBar = ({ energy }: { energy: number }) => {
+  const tier = getEnergyTier(energy);
+  return (
+    <div className="flex flex-col gap-1 w-full">
+      <div className="flex items-center gap-2">
+        <motion.div
+          animate={{ scale: [1, 1.2, 1] }}
+          transition={{ repeat: Infinity, duration: 1.5 }}
+        >
+          <Zap className={`w-5 h-5 flex-shrink-0 ${tier.textColor}`} />
+        </motion.div>
+        <div className={`flex-1 h-4 bg-background/40 rounded-full overflow-hidden backdrop-blur-sm ${tier.glowColor}`}>
+          <motion.div
+            className={`h-full rounded-full ${tier.color}`}
+            animate={{ 
+              width: `${Math.max(3, Math.min(100, energy))}%`,
+              opacity: [0.85, 1, 0.85],
+            }}
+            transition={{ 
+              width: { duration: 0.6 },
+              opacity: { repeat: Infinity, duration: 2 },
+            }}
+          />
+        </div>
+        <span className={`text-sm font-bold w-8 text-right ${tier.textColor}`}>{energy}</span>
+      </div>
+      <div className="flex items-center justify-between px-7">
+        <span className={`text-[10px] font-semibold ${tier.textColor}`}>{tier.label}</span>
+      </div>
     </div>
-    <span className="text-xs font-bold text-foreground/90 w-7 text-right">{energy}</span>
-  </div>
-);
+  );
+};
 
 const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -289,13 +314,20 @@ const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
                 {/* Energy delta */}
                 {showFeedback && energyDelta !== null && (
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className={`mt-3 text-center text-sm font-bold ${
-                      energyDelta > 0 ? "text-hope" : "text-accent"
+                    initial={{ opacity: 0, scale: 0.8, y: -10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    className={`mt-3 text-center py-2 px-4 rounded-xl font-bold text-base ${
+                      energyDelta > 0 
+                        ? "text-hope bg-hope/10 border border-hope/30" 
+                        : "text-accent bg-accent/10 border border-accent/30"
                     }`}
                   >
-                    에너지 {energyDelta > 0 ? `+${energyDelta}` : energyDelta} ⚡
+                    <motion.span
+                      animate={{ scale: [1, 1.15, 1] }}
+                      transition={{ duration: 0.6, delay: 0.2 }}
+                    >
+                      에너지 {energyDelta > 0 ? `+${energyDelta}` : energyDelta} ⚡
+                    </motion.span>
                   </motion.div>
                 )}
 
