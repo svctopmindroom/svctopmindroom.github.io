@@ -1,73 +1,91 @@
 import { motion } from "framer-motion";
-import { Heart, Shield, Users, Phone } from "lucide-react";
+import { Battery, Heart, Clock, RotateCcw } from "lucide-react";
 
 interface LandingPageProps {
   onStart: () => void;
 }
 
-const features = [
-  { icon: Heart, label: "자기 돌봄", desc: "나를 먼저 챙기는 법" },
-  { icon: Users, label: "동료 돌봄", desc: "옆 사람의 신호 읽기" },
-  { icon: Shield, label: "위기 대처", desc: "도움을 요청하는 용기" },
-  { icon: Phone, label: "도움 자원", desc: "언제든 연결되는 곳" },
+const steps = [
+  { icon: "⏰", label: "하루를 따라가며" },
+  { icon: "🔋", label: "에너지 변화 체험" },
+  { icon: "🌿", label: "회복 행동 선택" },
+  { icon: "📋", label: "나만의 루틴 저장" },
 ];
 
 const LandingPage = ({ onStart }: LandingPageProps) => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12">
+    <div className="min-h-screen flex flex-col items-center justify-center px-5 py-10">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="text-center max-w-2xl mx-auto"
+        className="text-center max-w-md mx-auto w-full"
       >
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-          className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6"
+          className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-5"
         >
-          <span className="text-4xl">🌿</span>
+          <Battery className="w-8 h-8 text-primary" />
         </motion.div>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
-          마음 한 켠,{" "}
-          <span className="text-gradient-warm">쉼표를 찍다</span>
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2 leading-tight">
+          오늘의 에너지 맵
         </h1>
-        <p className="text-muted-foreground text-lg mb-2">
-          콜센터 직원을 위한 생명존중 예방교육
+        <p className="text-gradient-warm text-lg font-semibold mb-1">
+          당신의 회복 루트
         </p>
-        <p className="text-muted-foreground/70 text-sm mb-10">
-          4개의 상황을 통해 나와 동료의 마음을 돌보는 법을 배워봅니다
+        <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
+          감정노동으로 지친 하루,<br />
+          작은 선택으로 에너지를 되찾는 연습을 해봐요.
         </p>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
-          {features.map((f, i) => (
+        {/* Steps */}
+        <div className="flex items-center justify-center gap-2 mb-8">
+          {steps.map((s, i) => (
             <motion.div
-              key={f.label}
-              initial={{ opacity: 0, y: 20 }}
+              key={i}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 + i * 0.1 }}
-              className="bg-card rounded-2xl p-4 shadow-sm border border-border"
+              className="flex flex-col items-center"
             >
-              <f.icon className="w-6 h-6 text-primary mx-auto mb-2" />
-              <p className="text-sm font-semibold text-foreground">{f.label}</p>
-              <p className="text-xs text-muted-foreground">{f.desc}</p>
+              <div className="w-12 h-12 rounded-xl bg-card border border-border flex items-center justify-center text-xl mb-1.5">
+                {s.icon}
+              </div>
+              <p className="text-[10px] text-muted-foreground font-medium">{s.label}</p>
+              {i < steps.length - 1 && (
+                <div className="hidden" /> 
+              )}
             </motion.div>
           ))}
+        </div>
+
+        {/* Info badges */}
+        <div className="flex items-center justify-center gap-3 mb-8 text-xs text-muted-foreground">
+          <span className="flex items-center gap-1 bg-card px-3 py-1.5 rounded-full border border-border">
+            <Clock className="w-3 h-3" /> 3~5분
+          </span>
+          <span className="flex items-center gap-1 bg-card px-3 py-1.5 rounded-full border border-border">
+            <RotateCcw className="w-3 h-3" /> 재플레이 가능
+          </span>
+          <span className="flex items-center gap-1 bg-card px-3 py-1.5 rounded-full border border-border">
+            <Heart className="w-3 h-3" /> 개인정보 없음
+          </span>
         </div>
 
         <motion.button
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
           onClick={onStart}
-          className="bg-primary text-primary-foreground px-8 py-4 rounded-2xl text-lg font-semibold shadow-lg hover:shadow-xl transition-shadow"
+          className="w-full bg-primary text-primary-foreground py-4 rounded-2xl text-base font-semibold shadow-lg"
         >
           시작하기
         </motion.button>
 
-        <p className="text-xs text-muted-foreground/50 mt-6">
-          소요시간: 약 5~10분 | 개인정보 수집 없음
+        <p className="text-[11px] text-muted-foreground/40 mt-5">
+          직장인 생명존중 예방교육
         </p>
       </motion.div>
     </div>
