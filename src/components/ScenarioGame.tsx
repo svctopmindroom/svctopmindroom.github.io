@@ -314,13 +314,20 @@ const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
                 {/* Energy delta */}
                 {showFeedback && energyDelta !== null && (
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className={`mt-3 text-center text-sm font-bold ${
-                      energyDelta > 0 ? "text-hope" : "text-accent"
+                    initial={{ opacity: 0, scale: 0.8, y: -10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    className={`mt-3 text-center py-2 px-4 rounded-xl font-bold text-base ${
+                      energyDelta > 0 
+                        ? "text-hope bg-hope/10 border border-hope/30" 
+                        : "text-accent bg-accent/10 border border-accent/30"
                     }`}
                   >
-                    에너지 {energyDelta > 0 ? `+${energyDelta}` : energyDelta} ⚡
+                    <motion.span
+                      animate={{ scale: [1, 1.15, 1] }}
+                      transition={{ duration: 0.6, delay: 0.2 }}
+                    >
+                      에너지 {energyDelta > 0 ? `+${energyDelta}` : energyDelta} ⚡
+                    </motion.span>
                   </motion.div>
                 )}
 
