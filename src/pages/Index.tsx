@@ -1,16 +1,33 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import LandingPage from "@/components/LandingPage";
+import ScenarioGame from "@/components/ScenarioGame";
+import ResultsPage from "@/components/ResultsPage";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+type GamePhase = "landing" | "playing" | "results";
+
+const Index = () => {
+  const [phase, setPhase] = useState<GamePhase>("landing");
+  const [scores, setScores] = useState<number[]>([]);
+
+  const handleStart = () => setPhase("playing");
+
+  const handleComplete = (finalScores: number[]) => {
+    setScores(finalScores);
+    setPhase("results");
+  };
+
+  const handleRestart = () => {
+    setScores([]);
+    setPhase("landing");
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
-    </div>
+    <>
+      {phase === "landing" && <LandingPage onStart={handleStart} />}
+      {phase === "playing" && <ScenarioGame onComplete={handleComplete} />}
+      {phase === "results" && <ResultsPage scores={scores} onRestart={handleRestart} />}
+    </>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
