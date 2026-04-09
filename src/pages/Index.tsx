@@ -7,17 +7,20 @@ type GamePhase = "landing" | "playing" | "results";
 
 const Index = () => {
   const [phase, setPhase] = useState<GamePhase>("landing");
-  const [scores, setScores] = useState<number[]>([]);
+  const [finalEnergy, setFinalEnergy] = useState(50);
+  const [userChoices, setUserChoices] = useState<{ sceneId: number; choiceText: string; emoji: string }[]>([]);
 
   const handleStart = () => setPhase("playing");
 
-  const handleComplete = (finalScores: number[]) => {
-    setScores(finalScores);
+  const handleComplete = (energy: number, choices: { sceneId: number; choiceText: string; emoji: string }[]) => {
+    setFinalEnergy(energy);
+    setUserChoices(choices);
     setPhase("results");
   };
 
   const handleRestart = () => {
-    setScores([]);
+    setFinalEnergy(50);
+    setUserChoices([]);
     setPhase("landing");
   };
 
@@ -25,7 +28,9 @@ const Index = () => {
     <>
       {phase === "landing" && <LandingPage onStart={handleStart} />}
       {phase === "playing" && <ScenarioGame onComplete={handleComplete} />}
-      {phase === "results" && <ResultsPage scores={scores} onRestart={handleRestart} />}
+      {phase === "results" && (
+        <ResultsPage energy={finalEnergy} choices={userChoices} onRestart={handleRestart} />
+      )}
     </>
   );
 };
