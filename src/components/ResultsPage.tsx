@@ -10,130 +10,6 @@ interface ResultsPageProps {
   characterName: string;
 }
 
-// --- Constellation component ---
-const ConstellationView = ({ 
-  choices, characterName 
-}: { 
-  choices: { sceneId: number; choiceText: string; emoji: string }[];
-  characterName: string;
-}) => {
-  // Determine which scenes had "good" (recover) choices
-  const goodSceneIds = new Set(
-    choices
-      .filter((c) => {
-        const scene = scenes.find((s) => s.id === c.sceneId);
-        if (!scene) return false;
-        const choice = scene.choices.find((ch) => ch.text === c.choiceText);
-        return choice?.tag === 'recover';
-      })
-      .map((c) => c.sceneId)
-  );
-
-  // Star positions along a path
-  const starPositions = scenes.map((s, i) => ({
-    x: 15 + (i / (scenes.length - 1)) * 70,
-    y: 25 + Math.sin(i * 0.8) * 20 + (i % 2 === 0 ? -5 : 5),
-    isGood: goodSceneIds.has(s.id),
-    name: s.location.name,
-  }));
-
-  return (
-    <div className="bg-gradient-to-b from-[hsl(230,40%,15%)] to-[hsl(245,30%,10%)] rounded-2xl p-5 border border-border mb-5 relative overflow-hidden">
-      {/* Night sky stars background */}
-      {Array.from({ length: 30 }).map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-0.5 h-0.5 bg-white/30 rounded-full"
-          style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
-          animate={{ opacity: [0.2, 0.6, 0.2] }}
-          transition={{ repeat: Infinity, duration: 2 + Math.random() * 3, delay: Math.random() * 2 }}
-        />
-      ))}
-
-      <div className="relative z-10">
-        {/* SVG constellation */}
-        <svg viewBox="0 0 100 70" className="w-full h-40 md:h-52 mb-3">
-          {/* Connection lines */}
-          {starPositions.map((pos, i) => {
-            if (i === 0) return null;
-            const prev = starPositions[i - 1];
-            return (
-              <motion.line
-                key={`line-${i}`}
-                x1={prev.x} y1={prev.y}
-                x2={pos.x} y2={pos.y}
-                stroke="hsl(200, 60%, 70%)"
-                strokeWidth="0.3"
-                strokeOpacity={0.4}
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ delay: 0.5 + i * 0.15, duration: 0.5 }}
-              />
-            );
-          })}
-          {/* Stars */}
-          {starPositions.map((pos, i) => (
-            <motion.g key={i}>
-              {pos.isGood && (
-                <motion.circle
-                  cx={pos.x} cy={pos.y} r="3"
-                  fill="hsl(45, 90%, 70%)"
-                  opacity={0.3}
-                  animate={{ r: [3, 5, 3], opacity: [0.2, 0.5, 0.2] }}
-                  transition={{ repeat: Infinity, duration: 2, delay: i * 0.2 }}
-                />
-              )}
-              <motion.circle
-                cx={pos.x} cy={pos.y}
-                r={pos.isGood ? 2 : 1}
-                fill={pos.isGood ? "hsl(45, 90%, 80%)" : "hsl(200, 30%, 60%)"}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.3 + i * 0.1, type: "spring" }}
-              />
-              <text
-                x={pos.x} y={pos.y + 6}
-                textAnchor="middle"
-                fill="hsl(200, 40%, 75%)"
-                fontSize="2.5"
-                opacity={0.7}
-              >
-                {pos.name}
-              </text>
-            </motion.g>
-          ))}
-        </svg>
-
-        {/* Character at window */}
-        <div className="text-center mb-3">
-          <div className="inline-flex items-center gap-2 bg-background/10 backdrop-blur-sm rounded-full px-4 py-2">
-            <span className="text-2xl">🧘</span>
-            <div className="relative">
-              <div className="bg-background/20 backdrop-blur rounded-xl px-3 py-1.5 text-sm text-white/90 font-medium">
-                "오늘 하루도 잘 보냈습니다"
-              </div>
-              {/* Speech bubble tail */}
-              <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 bg-background/20 rotate-45" />
-            </div>
-          </div>
-        </div>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="text-center text-lg font-bold text-[hsl(45,80%,75%)]"
-        >
-          ✨ {characterName}의 에너지 별자리 ✨
-        </motion.p>
-        <p className="text-center text-xs text-white/50 mt-1">
-          빛나는 별은 회복 행동을 선택한 순간이에요
-        </p>
-      </div>
-    </div>
-  );
-};
-
 const ResultsPage = ({ energy, choices, onRestart, characterName }: ResultsPageProps) => {
   const result = getEnergyLabel(energy);
   const [routine, setRoutine] = useState("");
@@ -256,8 +132,7 @@ const ResultsPage = ({ energy, choices, onRestart, characterName }: ResultsPageP
           </p>
         </div>
 
-        {/* Constellation ending */}
-        <ConstellationView choices={choices} characterName={characterName} />
+        {/* Help Resources */}
 
         {/* Help Resources */}
         <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-1.5">
