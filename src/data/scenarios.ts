@@ -46,7 +46,7 @@ export const scenes: Scene[] = [
     timeLabel: "AM 8:30",
     situation: "헤드셋 쓰고 모니터 켜자마자 쪽지 5개가 쌓여있음. 아직 커피도 못 마셨는데.",
     subtext: "하루의 시작, 나를 먼저 챙기기",
-    location: { name: "내 자리", emoji: "🖥️", positionPercent: 10, bgTime: 'morning', characterAction: 'sitting' },
+    location: { name: "사무실", emoji: "🏢", positionPercent: 10, bgTime: 'morning', characterAction: 'sitting' },
     choices: [
       { text: "바로 쪽지 열어 확인", emoji: "📱", feedback: "에너지 -10, 긴장 상승. 눈도 안 떴는데 바로 업무 모드 들어가면 하루가 길어져요.", energyChange: -10, tag: 'drain' },
       { text: "물 한 잔 먼저 마시기", emoji: "💧", feedback: "에너지 +5, 긴장 완화. 물 한 잔이 별거 아닌 것 같지만, '나 먼저'라는 신호예요.", energyChange: +5, tag: 'recover' },
@@ -61,7 +61,7 @@ export const scenes: Scene[] = [
     timeLabel: "AM 09:30",
     situation: "내가 세운 하루 목표가 뒤로 밀리게 된 상황. 공들인 게 허무해지는 순간.",
     subtext: "예고 없는 변화 앞에서",
-    location: { name: "사무실", emoji: "💻", positionPercent: 22, bgTime: 'midmorning', characterAction: 'typing' },
+    location: { name: "내 자리", emoji: "🖥️", positionPercent: 22, bgTime: 'midmorning', characterAction: 'typing' },
     choices: [
       { text: "에라이, 그럼 그렇지 목표 세우지도 말껄", emoji: "😔", feedback: "에너지 -10, 무력감 상승. 자기 노력을 부정하면 다음번에도 시도하기 어려워져요.", energyChange: -10, tag: 'drain' },
       { text: "우선순위 다시 확인", emoji: "🔍", feedback: "에너지 +3, 통제감 회복. 바뀐 건 바뀐 거고, 내가 할 수 있는 건 정리하는 거예요.", energyChange: +3, tag: 'recover' },
@@ -76,7 +76,7 @@ export const scenes: Scene[] = [
     timeLabel: "AM 11:50",
     situation: "어깨 굳고 머리 무거움. 점심 전인데 벌써 지침.",
     subtext: "몸의 신호를 알아채는 순간",
-    location: { name: "사무실", emoji: "💻", positionPercent: 32, bgTime: 'midmorning', characterAction: 'typing' },
+    location: { name: "내 자리", emoji: "🖥️", positionPercent: 32, bgTime: 'midmorning', characterAction: 'typing' },
     choices: [
       { text: "참고 계속", emoji: "😤", feedback: "에너지 -8, 피로 누적. 참는 게 강한 게 아니에요. 무시하면 오후에 더 힘들어져요.", energyChange: -8, tag: 'drain' },
       { text: "자세 좀 바꿈", emoji: "🪑", feedback: "에너지 +3, 긴장 완화. 허리 펴고 어깨 한 번 돌리면 30초만에 달라져요.", energyChange: +3, tag: 'recover' },
@@ -121,7 +121,7 @@ export const scenes: Scene[] = [
     timeLabel: "PM 3:00",
     situation: "잠깐 쉴 수 있는 순간. 이 3분을 어떻게 쓸까.",
     subtext: "작은 쉼이 큰 차이를 만들어요",
-    location: { name: "휴게실", emoji: "☕", positionPercent: 62, bgTime: 'afternoon', characterAction: 'stretching' },
+    location: { name: "내 자리", emoji: "🖥️", positionPercent: 62, bgTime: 'afternoon', characterAction: 'stretching' },
     choices: [
       { text: "깊게 숨쉬기", emoji: "🫁", feedback: "에너지 +5, 긴장 해소. 들숨 4초, 참기 7초, 날숨 8초. 몸이 금방 풀려요.", energyChange: +5, tag: 'recover' },
       { text: "창밖 보기", emoji: "🪟", feedback: "에너지 +4, 시야 전환. 모니터에서 눈 떼고 먼 곳 보는 것만으로도 리셋돼요.", energyChange: +4, tag: 'recover' },
@@ -136,7 +136,7 @@ export const scenes: Scene[] = [
     timeLabel: "PM 4:00",
     situation: "과부하 쌓이는 느낌. 머릿속에서 '더 해야 해' 소리가 반복됨.",
     subtext: "내 안의 목소리, 어떤 말을 선택할까",
-    location: { name: "내 자리", emoji: "💭", positionPercent: 72, bgTime: 'afternoon', characterAction: 'typing' },
+    location: { name: "내 자리", emoji: "🖥️", positionPercent: 72, bgTime: 'afternoon', characterAction: 'typing' },
     choices: [
       { text: "내가 못하니까 이런 생각 들지...", emoji: "🌀", feedback: "에너지 -10, 자기비난 심화. 스스로를 탓하면 에너지만 더 빠져요. 못하는 게 아니라 지친 거예요.", energyChange: -10, tag: 'drain' },
       { text: "우선순위 다시", emoji: "📋", feedback: "에너지 +4, 통제감 회복. 전부 다 못 해도 중요한 것부터 하면 돼요.", energyChange: +4, tag: 'recover' },
@@ -150,7 +150,7 @@ export const scenes: Scene[] = [
     timeLabel: "PM 5:00",
     situation: "같이 수고한 동료들에게 뭐라고 할까.",
     subtext: "따뜻한 한마디의 힘",
-    location: { name: "복도", emoji: "🤝", positionPercent: 80, bgTime: 'evening', characterAction: 'talking' },
+    location: { name: "퇴근무렵", emoji: "🌇", positionPercent: 80, bgTime: 'evening', characterAction: 'talking' },
     choices: [
       { text: "오늘 좀 벅찼어. 너는 어땠어?", emoji: "👋", feedback: "에너지 +4, 감정 해소. 솔직하게 나누면 서로 마음이 가벼워져요.", energyChange: +4, tag: 'recover' },
       { text: "아까 알려줘서 고마워", emoji: "🫂", feedback: "에너지 +5, 연결감 상승. 고마움을 표현하면 나도 따뜻해져요.", energyChange: +5, tag: 'recover' },

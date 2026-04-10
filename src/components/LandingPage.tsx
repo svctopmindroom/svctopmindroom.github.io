@@ -31,13 +31,13 @@ const LandingPage = ({ onStart }: LandingPageProps) => {
         </motion.div>
 
         <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2 leading-tight">
-          오늘의 에너지 맵
+          하루를 지키는 작은 선택
         </h1>
         <p className="text-gradient-warm text-lg font-semibold mb-1">
           당신의 회복 루트
         </p>
         <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
-          감정노동으로 지친 하루,<br />
+          예측 불가능한 우리의 하루,<br />
           작은 선택으로 에너지를 되찾는 연습을 해봐요.
         </p>
 
