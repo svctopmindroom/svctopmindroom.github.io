@@ -200,6 +200,7 @@ export const getEnergyLabel = (energy: number): { label: string; emoji: string; 
 };
 
 export const helpResources = [
+  { name: "서비스탑 심리상담실", number: "언제나 환영합니다", description: "사내 심리상담 서비스", icon: "🤗" },
   { name: "정신건강 위기상담 전화", number: "1393", description: "24시간 무료 상담", icon: "📞" },
   { name: "근로자 건강센터", number: "1588-6497", description: "직장인 심리상담", icon: "🏥" },
   { name: "정신건강복지센터", number: "1577-0199", description: "지역 정신건강 서비스", icon: "🌿" },

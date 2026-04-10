@@ -9,10 +9,10 @@ export interface CharacterInfo {
 }
 
 const characters = [
-  { id: "m1", emoji: "👨‍💼", label: "직장인 A", gender: "male" },
-  { id: "m2", emoji: "👨‍💻", label: "직장인 B", gender: "male" },
-  { id: "f1", emoji: "👩‍💼", label: "직장인 C", gender: "female" },
-  { id: "f2", emoji: "👩‍💻", label: "직장인 D", gender: "female" },
+  { id: "m1", emoji: "👨‍💼", label: "차분한 기획자", gender: "male", desc: "꼼꼼하고 신중한 성격", trait: "🧠 분석형" },
+  { id: "m2", emoji: "🧑‍💻", label: "열정적 개발자", gender: "male", desc: "도전을 즐기는 에너자이저", trait: "🔥 도전형" },
+  { id: "f1", emoji: "👩‍💼", label: "따뜻한 리더", gender: "female", desc: "동료를 먼저 챙기는 팀플레이어", trait: "💛 공감형" },
+  { id: "f2", emoji: "👩‍🎨", label: "자유로운 크리에이터", gender: "female", desc: "감각적이고 창의적인 자유영혼", trait: "🎨 감성형" },
 ];
 
 interface CharacterSelectProps {
@@ -63,14 +63,16 @@ const CharacterSelect = ({ onSelect }: CharacterSelectProps) => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setSelected(char.id)}
-                  className={`flex flex-col items-center gap-2 p-5 rounded-2xl border-2 transition-all ${
+                  className={`flex flex-col items-center gap-1.5 p-4 rounded-2xl border-2 transition-all ${
                     selected === char.id
                       ? "border-primary bg-primary/10 shadow-lg"
                       : "border-border bg-card hover:border-primary/30"
                   }`}
                 >
                   <span className="text-5xl">{char.emoji}</span>
-                  <span className="text-sm font-medium text-foreground">{char.label}</span>
+                  <span className="text-sm font-bold text-foreground">{char.label}</span>
+                  <span className="text-[10px] text-muted-foreground">{char.desc}</span>
+                  <span className="text-[10px] font-semibold text-primary/80 bg-primary/10 px-2 py-0.5 rounded-full">{char.trait}</span>
                 </motion.button>
               ))}
             </div>
