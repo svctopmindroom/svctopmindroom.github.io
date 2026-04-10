@@ -2,26 +2,20 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { scenes, type Choice } from "@/data/scenarios";
 import { Zap, ArrowRight, ChevronRight } from "lucide-react";
+import type { CharacterInfo } from "@/components/CharacterSelect";
 
 interface ScenarioGameProps {
   onComplete: (energy: number, choices: { sceneId: number; choiceText: string; emoji: string }[]) => void;
+  character: CharacterInfo;
 }
 
-// --- Character Component ---
-const Character = ({ action, energy }: { action: string; energy: number }) => {
+// --- Character Component with name ---
+const GameCharacter = ({ 
+  action, energy, character 
+}: { 
+  action: string; energy: number; character: CharacterInfo;
+}) => {
   const shoulderDrop = energy < 30 ? 4 : energy < 50 ? 2 : 0;
-  
-  const getCharacterEmoji = () => {
-    switch (action) {
-      case 'sitting': return '🧑‍💻';
-      case 'typing': return '⌨️';
-      case 'stretching': return '🙆';
-      case 'talking': return '🗣️';
-      case 'walking': return '🚶';
-      case 'resting': return '😌';
-      default: return '🧍';
-    }
-  };
 
   return (
     <motion.div
@@ -29,8 +23,16 @@ const Character = ({ action, energy }: { action: string; energy: number }) => {
       animate={{ y: shoulderDrop }}
       transition={{ duration: 0.5 }}
     >
+      {/* Name tag */}
       <motion.div
-        className="text-4xl md:text-5xl"
+        initial={{ opacity: 0, y: -5 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-primary/90 text-primary-foreground text-[9px] font-bold px-2 py-0.5 rounded-full mb-1 whitespace-nowrap shadow-sm"
+      >
+        {character.name}
+      </motion.div>
+      <motion.div
+        className="text-3xl md:text-4xl"
         animate={
           action === 'walking' ? { x: [0, 3, 0, -3, 0] } :
           action === 'typing' ? { y: [0, -2, 0] } :
@@ -40,9 +42,9 @@ const Character = ({ action, energy }: { action: string; energy: number }) => {
         }
         transition={{ repeat: Infinity, duration: action === 'walking' ? 0.8 : 1.5 }}
       >
-        {getCharacterEmoji()}
+        {character.emoji}
       </motion.div>
-      {/* Energy indicator under character */}
+      {/* Energy indicator */}
       <div className="mt-1 w-10 h-1.5 rounded-full bg-muted overflow-hidden">
         <motion.div
           className={`h-full rounded-full ${
@@ -57,9 +59,9 @@ const Character = ({ action, energy }: { action: string; energy: number }) => {
 
 // --- World Location ---
 const WorldLocation = ({ 
-  emoji, name, isActive, isPast, index 
+  emoji, name, isActive, isPast 
 }: { 
-  emoji: string; name: string; isActive: boolean; isPast: boolean; index: number;
+  emoji: string; name: string; isActive: boolean; isPast: boolean;
 }) => (
   <div className={`flex flex-col items-center transition-all duration-500 ${
     isActive ? 'scale-110 opacity-100' : isPast ? 'opacity-50 scale-90' : 'opacity-30 scale-90'
@@ -75,9 +77,20 @@ const WorldLocation = ({
   </div>
 );
 
-// --- Background gradient based on time (brighter tones) ---
-const getTimeGradient = (bgTime: string, energy: number) => {
+// --- Background with location-based imagery ---
+const getLocationBackground = (bgTime: string, energy: number, locationName: string) => {
   const dimFactor = Math.max(0.6, energy / 100);
+  
+  // Location-specific accent overlays
+  const locationOverlays: Record<string, string> = {
+    '집': `radial-gradient(ellipse at 50% 80%, hsl(30 40% ${75 * dimFactor}% / 0.3) 0%, transparent 70%)`,
+    '사무실': `radial-gradient(ellipse at 50% 60%, hsl(210 30% ${70 * dimFactor}% / 0.2) 0%, transparent 70%)`,
+    '내 자리': `radial-gradient(ellipse at 50% 70%, hsl(200 25% ${72 * dimFactor}% / 0.2) 0%, transparent 70%)`,
+    '동료 자리': `radial-gradient(ellipse at 50% 60%, hsl(220 30% ${68 * dimFactor}% / 0.2) 0%, transparent 70%)`,
+    '퇴근무렵': `radial-gradient(ellipse at 50% 40%, hsl(25 50% ${65 * dimFactor}% / 0.3) 0%, transparent 70%)`,
+    '퇴근길': `radial-gradient(ellipse at 50% 50%, hsl(30 45% ${55 * dimFactor}% / 0.3) 0%, transparent 70%)`,
+  };
+
   const baseGradients: Record<string, string> = {
     morning: `linear-gradient(180deg, hsl(205 70% ${85 * dimFactor}%) 0%, hsl(45 70% ${95 * dimFactor}%) 100%)`,
     midmorning: `linear-gradient(180deg, hsl(200 65% ${82 * dimFactor}%) 0%, hsl(42 60% ${92 * dimFactor}%) 100%)`,
@@ -86,11 +99,25 @@ const getTimeGradient = (bgTime: string, energy: number) => {
     evening: `linear-gradient(180deg, hsl(25 55% ${65 * dimFactor}%) 0%, hsl(240 35% ${55 * dimFactor}%) 100%)`,
     night: `linear-gradient(180deg, hsl(230 40% ${35 * dimFactor}%) 0%, hsl(245 30% ${22 * dimFactor}%) 100%)`,
   };
-  return baseGradients[bgTime] || baseGradients.morning;
+
+  const base = baseGradients[bgTime] || baseGradients.morning;
+  const overlay = locationOverlays[locationName] || '';
+  
+  return overlay ? `${overlay}, ${base}` : base;
 };
 
-// --- World buildings between locations ---
-const worldElements = ['🏠', '🌳', '🚗', '🏢', '🌳', '🖥️', '💻', '🍽️', '🪑', '📊', '☕', '💭', '🤝', '🌳', '🚶', '🏠'];
+// --- Location scene emoji decoration ---
+const getLocationDecor = (locationName: string) => {
+  switch (locationName) {
+    case '집': return ['🛏️', '🪟', '☕'];
+    case '사무실': return ['🏢', '📋', '💻'];
+    case '내 자리': return ['🖥️', '⌨️', '📊'];
+    case '동료 자리': return ['🪑', '📱', '💬'];
+    case '퇴근무렵': return ['🌇', '💭', '🤝'];
+    case '퇴근길': return ['🌆', '🎧', '🚶'];
+    default: return ['🌳', '☁️'];
+  }
+};
 
 // --- Energy tier helpers ---
 const getEnergyTier = (energy: number) => {
@@ -106,23 +133,14 @@ const EnergyBar = ({ energy }: { energy: number }) => {
   return (
     <div className="flex flex-col gap-1 w-full">
       <div className="flex items-center gap-2">
-        <motion.div
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
-        >
+        <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1.5 }}>
           <Zap className={`w-5 h-5 flex-shrink-0 ${tier.textColor}`} />
         </motion.div>
         <div className={`flex-1 h-4 bg-background/40 rounded-full overflow-hidden backdrop-blur-sm ${tier.glowColor}`}>
           <motion.div
             className={`h-full rounded-full ${tier.color}`}
-            animate={{ 
-              width: `${Math.max(3, Math.min(100, energy))}%`,
-              opacity: [0.85, 1, 0.85],
-            }}
-            transition={{ 
-              width: { duration: 0.6 },
-              opacity: { repeat: Infinity, duration: 2 },
-            }}
+            animate={{ width: `${Math.max(3, Math.min(100, energy))}%`, opacity: [0.85, 1, 0.85] }}
+            transition={{ width: { duration: 0.6 }, opacity: { repeat: Infinity, duration: 2 } }}
           />
         </div>
         <span className={`text-sm font-bold w-8 text-right ${tier.textColor}`}>{energy}</span>
@@ -134,7 +152,7 @@ const EnergyBar = ({ energy }: { energy: number }) => {
   );
 };
 
-const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
+const ScenarioGame = ({ onComplete, character }: ScenarioGameProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [energy, setEnergy] = useState(50);
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
@@ -146,17 +164,15 @@ const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scene = scenes[currentIndex];
+  const locationDecor = getLocationDecor(scene.location.name);
 
-  // Auto-scroll to current position and show scene
   useEffect(() => {
     setIsTransitioning(true);
     setShowScene(false);
-
     const timer = setTimeout(() => {
       setIsTransitioning(false);
       setShowScene(true);
     }, 1200);
-
     return () => clearTimeout(timer);
   }, [currentIndex]);
 
@@ -196,8 +212,26 @@ const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
   return (
     <div
       className="min-h-screen flex flex-col relative overflow-hidden transition-all duration-1000"
-      style={{ background: getTimeGradient(scene.location.bgTime, energy) }}
+      style={{ background: getLocationBackground(scene.location.bgTime, energy, scene.location.name) }}
     >
+      {/* Location decoration */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {locationDecor.map((emoji, i) => (
+          <motion.div
+            key={`${scene.location.name}-${i}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.15 }}
+            className="absolute text-6xl md:text-8xl"
+            style={{
+              top: `${20 + i * 25}%`,
+              left: i % 2 === 0 ? '5%' : '75%',
+            }}
+          >
+            {emoji}
+          </motion.div>
+        ))}
+      </div>
+
       {/* Fixed header */}
       <div className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 pb-2 bg-gradient-to-b from-background/80 to-transparent backdrop-blur-sm">
         <div className="max-w-lg mx-auto">
@@ -206,7 +240,6 @@ const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
             <span>{currentIndex + 1} / {scenes.length}</span>
           </div>
           <EnergyBar energy={energy} />
-          {/* Progress track */}
           <div className="flex gap-0.5 mt-2">
             {scenes.map((_, i) => (
               <div
@@ -222,13 +255,9 @@ const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
 
       {/* Scrollable world view */}
       <div className="flex-1 flex flex-col pt-20 pb-4">
-        {/* World panorama */}
-        <div className="relative h-28 md:h-36 overflow-hidden" ref={scrollRef}>
+        <div className="relative h-32 md:h-40 overflow-hidden" ref={scrollRef}>
           <div className="absolute inset-0 flex items-end">
-            {/* Ground */}
             <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-foreground/5 to-transparent" />
-            
-            {/* Scrolling world content */}
             <motion.div
               className="flex items-end gap-6 md:gap-8 px-8 pb-3 w-full justify-center"
               animate={{ x: `${-currentIndex * 12}%` }}
@@ -242,7 +271,7 @@ const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
                       animate={{ opacity: 1, y: 0 }}
                       className="mb-1"
                     >
-                      <Character action={s.location.characterAction} energy={energy} />
+                      <GameCharacter action={s.location.characterAction} energy={energy} character={character} />
                     </motion.div>
                   )}
                   <WorldLocation
@@ -250,7 +279,6 @@ const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
                     name={s.location.name}
                     isActive={i === currentIndex}
                     isPast={i < currentIndex}
-                    index={i}
                   />
                 </div>
               ))}
@@ -259,7 +287,7 @@ const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
         </div>
 
         {/* Scene card */}
-        <div className="flex-1 px-4 max-w-lg mx-auto w-full">
+        <div className="flex-1 px-4 max-w-lg mx-auto w-full relative z-10">
           <AnimatePresence mode="wait">
             {showScene && (
               <motion.div
@@ -269,7 +297,6 @@ const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.4 }}
               >
-                {/* Scene description */}
                 <div className="bg-background/70 backdrop-blur-md rounded-2xl p-4 border border-background/80 mb-3 shadow-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-2xl">{scene.icon}</span>
@@ -281,7 +308,6 @@ const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
                   <p className="text-sm text-foreground/85 leading-relaxed">{scene.situation}</p>
                 </div>
 
-                {/* Choices */}
                 <div className="space-y-2">
                   {scene.choices.map((choice, i) => (
                     <motion.button
@@ -311,7 +337,6 @@ const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
                   ))}
                 </div>
 
-                {/* Energy delta */}
                 {showFeedback && energyDelta !== null && (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.8, y: -10 }}
@@ -331,7 +356,6 @@ const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
                   </motion.div>
                 )}
 
-                {/* Next button */}
                 {showFeedback && (
                   <motion.div
                     initial={{ opacity: 0, y: 8 }}
@@ -354,7 +378,6 @@ const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
             )}
           </AnimatePresence>
 
-          {/* Transition state */}
           {isTransitioning && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -365,9 +388,16 @@ const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
               <motion.div
                 animate={{ x: [0, 10, 0] }}
                 transition={{ repeat: Infinity, duration: 0.8 }}
-                className="text-3xl mb-3"
+                className="text-3xl mb-1"
               >
-                🚶
+                {character.emoji}
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-xs font-bold text-foreground/70 mb-2"
+              >
+                {character.name}
               </motion.div>
               <p className="text-sm text-foreground/60 font-medium">
                 {scene.location.name}(으)로 이동 중...
@@ -376,18 +406,6 @@ const ScenarioGame = ({ onComplete }: ScenarioGameProps) => {
           )}
         </div>
       </div>
-
-      {/* Scroll hint on first scene */}
-      {currentIndex === 0 && !showScene && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 1, 0] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-          className="fixed bottom-8 left-1/2 -translate-x-1/2 text-foreground/40 text-xs flex items-center gap-1"
-        >
-          이동 중 <ChevronRight className="w-3 h-3" />
-        </motion.div>
-      )}
     </div>
   );
 };
