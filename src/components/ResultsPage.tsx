@@ -62,8 +62,20 @@ const ResultsPage = ({ energy, choices, onRestart, characterName }: ResultsPageP
               <span className="text-lg font-bold text-foreground">{energy}</span>
             </div>
           </div>
-          <p className="text-sm text-muted-foreground">최종 에너지 점수</p>
+        <p className="text-sm text-muted-foreground">최종 에너지 점수</p>
         </div>
+
+        {/* Emergency message */}
+        {result.label === "긴급 충전 필요" && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="bg-destructive/10 text-destructive border border-destructive/20 rounded-2xl p-4 mb-5 text-center text-sm font-medium leading-relaxed"
+          >
+            ⚡ 긴급 충전이 필요해요! 심리상담실에서 긴급 충전 해드립니다 :) 걱정마세요. 상쾌하고 힘나는 처방을 드립니다!
+          </motion.div>
+        )}
 
         {/* Recovery choices */}
         {recoveryChoices.length > 0 && (
