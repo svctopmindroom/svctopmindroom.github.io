@@ -73,7 +73,7 @@ const ResultsPage = ({ energy, choices, onRestart, characterName }: ResultsPageP
             transition={{ delay: 0.3, duration: 0.5 }}
             className="bg-destructive/10 text-destructive border border-destructive/20 rounded-2xl p-4 mb-5 text-center text-sm font-medium leading-relaxed"
           >
-            ⚡ 긴급 충전이 필요해요! 심리상담실에서 긴급 충전 해드립니다 :) 걱정마세요. 상쾌하고 힘나는 처방을 드립니다!
+            ⚡ 오늘은 조금 더 나를 돌봐주세요. 혼자 감당하기 버거운 날에는 누군가와 이야기 하는것도 회복의 방법입니다. 사내 심리상담실에서 잠시 쉬어가세요. 에너지의 긴급충전이 필요해 방문하신 분께는 '마음충전 키트'를 드립니다.
           </motion.div>
         )}
 
