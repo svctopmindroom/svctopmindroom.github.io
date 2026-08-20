@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Battery, Heart, Clock, RotateCcw } from "lucide-react";
+import { Battery, Heart, Clock, RotateCcw, Sparkles } from "lucide-react";
 
 interface LandingPageProps {
   onStart: () => void;
@@ -8,7 +8,7 @@ interface LandingPageProps {
 const steps = [
   { icon: "⏰", label: "하루를 따라가며" },
   { icon: "🔋", label: "에너지 변화 체험" },
-  { icon: "🌿", label: "회복 행동 선택" },
+  { icon: <Sparkles className="w-6 h-6 text-primary" />, label: "회복 행동 선택" },
   { icon: "📋", label: "나만의 루틴 저장" },
 ];
 
@@ -31,7 +31,7 @@ const LandingPage = ({ onStart }: LandingPageProps) => {
         </motion.div>
 
         <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2 leading-tight">
-          하루를 지키는 작은 선택
+          오늘, 나를 챙기는 1분
         </h1>
         <p className="text-gradient-warm text-lg font-semibold mb-1">
           당신의 회복 루트
@@ -52,7 +52,7 @@ const LandingPage = ({ onStart }: LandingPageProps) => {
               className="flex flex-col items-center"
             >
               <div className="w-12 h-12 rounded-xl bg-card border border-border flex items-center justify-center text-xl mb-1.5">
-                {s.icon}
+                {typeof s.icon === "string" ? s.icon : s.icon}
               </div>
               <p className="text-[10px] text-muted-foreground font-medium">{s.label}</p>
               {i < steps.length - 1 && (
@@ -65,7 +65,7 @@ const LandingPage = ({ onStart }: LandingPageProps) => {
         {/* Info badges */}
         <div className="flex items-center justify-center gap-3 mb-8 text-xs text-muted-foreground">
           <span className="flex items-center gap-1 bg-card px-3 py-1.5 rounded-full border border-border">
-            <Clock className="w-3 h-3" /> 3~5분
+            <Clock className="w-3 h-3" /> 1~3분
           </span>
           <span className="flex items-center gap-1 bg-card px-3 py-1.5 rounded-full border border-border">
             <RotateCcw className="w-3 h-3" /> 재플레이 가능
@@ -85,7 +85,7 @@ const LandingPage = ({ onStart }: LandingPageProps) => {
         </motion.button>
 
         <p className="text-[11px] text-muted-foreground/40 mt-5">
-          직장인 생명존중 예방교육
+          서비스탑 기업문화팀
         </p>
       </motion.div>
     </div>

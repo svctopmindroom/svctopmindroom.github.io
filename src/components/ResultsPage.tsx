@@ -73,7 +73,7 @@ const ResultsPage = ({ energy, choices, onRestart, characterName }: ResultsPageP
             transition={{ delay: 0.3, duration: 0.5 }}
             className="bg-destructive/10 text-destructive border border-destructive/20 rounded-2xl p-4 mb-5 text-center text-sm font-medium leading-relaxed"
           >
-            ⚡ 오늘은 조금 더 나를 돌봐주세요. 혼자 감당하기 버거운 날에는 누군가와 이야기 하는것도 회복의 방법입니다. 사내 심리상담실에서 잠시 쉬어가세요. 에너지의 긴급충전이 필요해 방문하신 분께는 '마음충전 키트'를 드립니다.
+            ⚡ 오늘은 조금 더 나를 돌봐주세요. 혼자 감당하기 버거운 날에는 누군가와 이야기 하는것도 회복의 방법입니다. 사내 심리상담실에서 잠시 쉬어가세요. 에너지의 긴급충전이 필요해 방문하신 분께는 '환영하는 마음'으로 에너지를 드립니다. #대환영#에너지 간식과 함께 #기다릴께요.
           </motion.div>
         )}
 
@@ -178,7 +178,7 @@ const ResultsPage = ({ energy, choices, onRestart, characterName }: ResultsPageP
         </button>
 
         <p className="text-center text-[10px] text-muted-foreground/40 mt-5">
-          본 교육은 예방 교육 목적이며, 전문 상담을 대체하지 않습니다.
+          본 게임은 서비스탑 구성원을 위해 제작한 참여형 콘텐츠이며, 전문 상담을 대체하지 않습니다.
         </p>
       </motion.div>
     </div>

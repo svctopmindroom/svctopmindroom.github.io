@@ -95,7 +95,7 @@ export const scenes: Scene[] = [
     timeLabel: "PM 1:00",
     situation: "오늘따라 문의가 많음. 왠지 피곤한 날이 될 것 같은 느낌.",
     subtext: "많은 문의, 쌓이는 피로감",
-    location: { name: "상담 창구", emoji: "🎧", positionPercent: 42, bgTime: 'noon', characterAction: 'standing' },
+    location: { name: "내 자리", emoji: "🎧", positionPercent: 42, bgTime: 'noon', characterAction: 'standing' },
     choices: [
       { text: "대기호 보며 미리 스트레스 받기 보다 '지금 현재' 내가 받고있는 콜에 집중하기", emoji: "🎯", feedback: "에너지 +5, 현재 집중. 앞으로 올 일을 걱정하기보다 지금 이 콜에 집중하면 마음이 가벼워져요.", energyChange: +5, tag: 'recover' },
       { text: "'물들어 올때 노 젓는다.' 기왕 하는거 뭐라도 더해보자", emoji: "💪", feedback: "에너지 +5, 주도감 상승. 활발히 움직이면 몰입하면서 에너지가 생기기도 해요.", energyChange: +5, tag: 'recover' },
